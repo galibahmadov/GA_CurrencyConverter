@@ -36,7 +36,7 @@ body {
     display: none;
 }
 
-header {
+nav {
     display: flex;
     justify-content: space-evenly;
     background: #F5F5F6;;
@@ -45,7 +45,7 @@ header {
     height: 50px;
 }
 
-.headers {
+.navs {
     margin: 17px 5px;
     height: 19px;
     display: flex;
@@ -195,9 +195,7 @@ button:hover {
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     color: #C6C6C6;
-    /* -webkit-appearance: none;
-    -moz-appearance: none; */
-    background-image: url("./img/chevron-down.png");
+    background-image: url("./img/down.png");
     background-repeat: no-repeat;
     background-position-x: 33px;
     background-position-y: center;

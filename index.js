@@ -1,19 +1,16 @@
-window.addEventListener('load', runApp);
+window.addEventListener('load', getResult);
 
-let leftInput = document.getElementById('left-input');
-let rightInput = document.getElementById('right-input');
+let leftValue = document.getElementById('left-input');
+let rightValue = document.getElementById('right-input');
 
-let iHaves = document.querySelectorAll('.i-have');
-let iWants = document.querySelectorAll('.i-want');
+let have = document.querySelectorAll('.i-have');
+let want = document.querySelectorAll('.i-want');
 
-let leftDescription = document.getElementById('left-description');
-let rightDescription = document.getElementById('right-description');
+have.forEach(item => item.addEventListener('click', clicked));
+want.forEach(item => item.addEventListener('click', clicked));
 
-iHaves.forEach(item => item.addEventListener('click', clicked));
-iWants.forEach(item => item.addEventListener('click', clicked));
-
-let clickedIhave;
-let clickedIwant;
+let iHave;
+let iWant;
 
 let leftResponse;
 let rightResponse;
@@ -27,55 +24,58 @@ let right = rightDiv.getBoundingClientRect().left;
 let arrowButton = document.getElementById('button');
 arrowButton.addEventListener('click', toggle);
 
-function runApp() {
-    clickedIhave = 'RUB';
-    clickedIwant = 'USD';
+function getResult() {
+    iHave = 'RUB';
+    iWant = 'USD';
     getResponse();
-    leftInput.addEventListener('input', calculateRight);
-    rightInput.addEventListener('input', calculateLeft);
+    leftValue.addEventListener('input', calculateRight);
+    rightValue.addEventListener('input', calculateLeft);
 }
 
+let leftp = document.getElementById('left-description');
+let rightp = document.getElementById('right-description');
+
 function calculateRight() {
-    let cleanLeftInput = cleaner(leftInput.value);
+    let cleanleftValue = cleaner(leftValue.value);
     setTimeout(() => {
-        leftInput.value = cleanLeftInput;
+        leftValue.value = cleanleftValue;
     }, 0);
-    if (leftInput.value === '.') {
-        rightInput.value = 0;
+    if (leftValue.value === '.') {
+        rightValue.value = 0;
     } else {
-        rightInput.value = cleanLeftInput * +leftResponse.rates[clickedIwant].toFixed(4);
-        leftDescription.innerText = `1 ${clickedIhave} = ${+leftResponse.rates[clickedIwant].toFixed(4)} ${clickedIwant}`
-        rightDescription.innerText = `1 ${clickedIwant} = ${(1 / +leftResponse.rates[clickedIwant]).toFixed(4)} ${clickedIhave}`
+        rightValue.value = cleanleftValue * +leftResponse.rates[iWant].toFixed(4);
+        leftp.innerText = `1 ${iHave} = ${+leftResponse.rates[iWant].toFixed(4)} ${iWant}`
+        rightp.innerText = `1 ${iWant} = ${(1 / +leftResponse.rates[iWant]).toFixed(4)} ${iHave}`
     }
 }
 
 function calculateLeft() {
-    let cleanRightInput = cleaner(rightInput.value);
+    let cleanrightValue = cleaner(rightValue.value);
     setTimeout(() => {
-        rightInput.value = cleanRightInput;
+        rightValue.value = cleanrightValue;
     }, 0);
-    if (rightInput.value === '.') {
-        leftInput.value = 0;
+    if (rightValue.value === '.') {
+        leftValue.value = 0;
     } else {
-    leftInput.value = cleanRightInput * +rightResponse.rates[clickedIhave].toFixed(4);
+    leftValue.value = cleanrightValue * +rightResponse.rates[iHave].toFixed(4);
     }
 }
 
 function clicked(e) {
     if (e.target.classList.contains('i-have')) {
-        iHaves.forEach(item => item.classList.remove('clicked'));
+        have.forEach(item => item.classList.remove('clicked'));
         if (e.target.classList.contains('currency')) {
-            clickedIhave = e.target.innerText;
+            iHave = e.target.innerText;
         } else if (e.target.classList.contains('select')) {
-            clickedIhave = e.target.value;
+            iHave = e.target.value;
         }
     }
     if (e.target.classList.contains('i-want')) {
-        iWants.forEach(item => item.classList.remove('clicked'));
+        want.forEach(item => item.classList.remove('clicked'));
         if (e.target.classList.contains('currency')) {
-            clickedIwant = e.target.innerText;
+            iWant = e.target.innerText;
         } else if (e.target.classList.contains('select')) {
-            clickedIwant = e.target.value;
+            iWant = e.target.value;
         }
     }
     e.target.classList.add('clicked');
@@ -84,8 +84,8 @@ function clicked(e) {
 
 function getResponse() {
     document.querySelector('.ghost').classList.remove('hidden');
-    let responseL = fetch(`https://api.ratesapi.io/api/latest?base=${clickedIhave}&symbols=${clickedIwant}`);
-    let responseR = fetch(`https://api.ratesapi.io/api/latest?base=${clickedIwant}&symbols=${clickedIhave}`);
+    let responseL = fetch(`https://api.ratesapi.io/api/latest?base=${iHave}&symbols=${iWant}`);
+    let responseR = fetch(`https://api.ratesapi.io/api/latest?base=${iWant}&symbols=${iHave}`);
     Promise.all([
         responseL,
         responseR
